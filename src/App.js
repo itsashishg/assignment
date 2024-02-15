@@ -7,15 +7,15 @@ import TransformerComponent from './components/transform';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import CircleShape from './components/circle';
-import { getShapesData, saveData } from './components/misc'
+import { getCircleData, getRectangleData, saveData } from './components/misc'
 
 
 function App() {
   const stageRef = useRef(null);
   const width = 1850;
   const height = 750;
-  const [circle, setCircles] = useState(getShapesData('circle'));
-  const [rectangles, setRectangles] = useState(getShapesData('rectangle'));
+  const [circle, setCircles] = useState(getCircleData());
+  const [rectangles, setRectangles] = useState(getRectangleData());
   const [selectedShapeID, setSelectedShapeID] = useState("");
 
   const handleStageMouseDown = (e) => {
@@ -95,18 +95,34 @@ function App() {
 
   function addNewCircle() {
     let temp = circle;
-    temp.push({ id: temp.length + 1, x: 500, y: 500, rotation: 0, isDragging: false, fill: "#89b717", name: temp.length + 1 });
+    temp.push({ id: (temp.length + 1), x: 500, y: 500, rotation: 0, isDragging: false, fill: "#89b717", name: 'circle' + (temp.length + 1) });
     setCircles(temp);
   }
 
   function addNewRectangle() {
     let temp = rectangles;
     temp.push({
-      x: 100, y: 100, width: 100, height: 100, fill: "red", name: 'rectangle' + rectangles.length + 1, id: rectangles.length + 1
+      x: 100, y: 100, width: 100, height: 100, fill: "red", name: 'rectangle' + (rectangles.length + 1), id: (rectangles.length + 1)
     });
     setRectangles(temp);
   }
 
+  const unSelectShape = (prop) => {
+    setSelectedShapeID('');
+  };
+
+  const onDeleteShape = (node) => {
+    if (rectangles.findIndex((e) => e.name === selectedShapeID) !== -1) {
+      let temp = rectangles;
+      temp.splice((rectangles.findIndex(e => e.name === selectedShapeID)), 1);
+      setRectangles(temp);
+    }
+    if (circle.findIndex((e) => e.name === selectedShapeID) !== -1) {
+      let temp = circle;
+      temp.splice((circle.findIndex(e => e.name === selectedShapeID)), 1);
+      setCircles(temp);
+    }
+  };
 
 
   return (
@@ -115,14 +131,14 @@ function App() {
         <div className='col-sm-4 d-flex flex-column justify-content-evenly align-items-center'>
           <span className='d-flex justify-content-evenly w-100'>
             <span>
-              <Button variant="outline-primary" onClick={() => { addNewCircle() }}>Add circle</Button>
+              <Button variant="outline-primary" onClick={() => { addNewCircle(); }}>Add circle</Button>
             </span>
             <span>
               <Button variant="outline-primary" onClick={() => { addNewRectangle() }}>Add rectangle</Button>
             </span>
           </span>
           <span>
-            <Button variant="outline-primary" onClick={() => { saveData([...circle, ...rectangles]) }}>Save Data</Button>
+            <Button variant="outline-primary" onClick={() => { saveData(circle, rectangles) }}>Save Data</Button>
           </span>
         </div>
         <div className='col-sm-8 d-flex flex-column'>
@@ -158,7 +174,7 @@ function App() {
                 onTransform={(newProps) => handleChange(i, newProps, 'circle')}
               />
             ))}
-            <TransformerComponent selectedShapeID={selectedShapeID} />
+            <TransformerComponent selectedShapeID={selectedShapeID} unSelectShape={unSelectShape} onDelete={onDeleteShape} stageScale={stage.scale} />
           </Layer>
         </Stage>
       </div>

@@ -1,8 +1,14 @@
 import React, { useEffect, useRef } from "react";
-import { Transformer } from "react-konva";
+import { Circle, Transformer } from "react-konva";
 
-function TransformerComponent({ selectedShapeID }) {
+function TransformerComponent({ selectedShapeID, unSelectShape, onDelete, stageScale }) {
     const transformerRef = useRef(null);
+    const deleteButton = useRef();
+
+    const handleDelete = () => {
+        unSelectShape(null);
+        onDelete(transformerRef.current);
+    };
 
     const checkNode = () => {
         const stage = transformerRef.current.getStage();
@@ -24,11 +30,9 @@ function TransformerComponent({ selectedShapeID }) {
     });
 
     return (
-        <Transformer
-            ref={transformerRef}
-            keepRatio={false}
-            rotateAnchorOffset={25}
-        />
+        <Transformer ref={transformerRef} keepRatio={false} rotateAnchorOffset={25}>
+            <Circle radius={8} fill="red" ref={deleteButton} onClick={handleDelete} x={(transformerRef?.current?.width() ?? 1) * stageScale}></Circle>
+        </Transformer>
     );
 }
 
