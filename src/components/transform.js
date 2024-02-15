@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { Transformer } from "react-konva";
 
-function TransformerComponent({ selectedShapeName }) {
+function TransformerComponent({ selectedShapeID }) {
     const transformerRef = useRef(null);
 
     const checkNode = () => {
         const stage = transformerRef.current.getStage();
-        const selectedNode = stage.findOne("." + selectedShapeName);
+        const selectedNode = stage.findOne("." + selectedShapeID);
         if (selectedNode === transformerRef.current.node()) {
             return;
         }
@@ -21,7 +21,7 @@ function TransformerComponent({ selectedShapeName }) {
 
     useEffect(() => {
         checkNode();
-    }, [selectedShapeName, transformerRef]);
+    }, [selectedShapeID, transformerRef]);
 
     return (
         <Transformer
