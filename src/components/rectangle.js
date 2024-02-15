@@ -14,18 +14,8 @@ function Rectangle({ x, y, width, height, fill, name, onTransform }) {
     };
 
     return (
-        <Rect
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            scaleX={1}
-            scaleY={1}
-            fill={fill}
-            name={name}
-            onDragEnd={handleChange}
-            onTransformEnd={handleChange}
-            draggable
+        <Rect x={x} y={y} width={width} height={height} scaleX={1} scaleY={1} fill={fill} name={name} onDragEnd={handleChange}
+            onTransformEnd={handleChange} draggable
         />
     );
 }

@@ -7,6 +7,7 @@ function TransformerComponent({ selectedShapeID }) {
     const checkNode = () => {
         const stage = transformerRef.current.getStage();
         const selectedNode = stage.findOne("." + selectedShapeID);
+        console.log(selectedNode);
         if (selectedNode === transformerRef.current.node()) {
             return;
         }
@@ -21,7 +22,7 @@ function TransformerComponent({ selectedShapeID }) {
 
     useEffect(() => {
         checkNode();
-    }, [selectedShapeID, transformerRef]);
+    });
 
     return (
         <Transformer

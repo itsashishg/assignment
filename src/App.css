@@ -1,0 +1,10 @@
+html,
+#root {
+    height: 100%;
+}
+
+.canvas-border {
+    margin: 1.2%;
+    border: solid 1px #9b9999;
+    border-radius: 0.3em;
+}

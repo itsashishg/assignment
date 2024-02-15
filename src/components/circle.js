@@ -1,7 +1,7 @@
 import React from "react";
-import { Rect } from "react-konva";
+import { Circle } from "react-konva";
 
-function Circle({ x, y, width, height, fill, name, onTransform }) {
+function CircleShape({ x, y, name, onTransform }) {
     const handleChange = (e) => {
         const shape = e.target;
         onTransform({
@@ -14,8 +14,9 @@ function Circle({ x, y, width, height, fill, name, onTransform }) {
     };
 
     return (
-        <Circle x={x} y={y} stroke="black" draggable radius={50} />
+        <Circle x={x} y={y} name={name} stroke="black" draggable radius={50} onDragEnd={handleChange}
+            onTransformEnd={handleChange} />
     );
 }
 
-export default Circle;
+export default CircleShape;

@@ -6,28 +6,19 @@ import Rectangle from './components/rectangle';
 import TransformerComponent from './components/transform';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
-// import Circle from './components/circle';
-
+import CircleShape from './components/circle';
 
 function getShapesData(type) {
   return [...Array(2)].map((_, i) => ({
-    id: i.toString(),
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    width: 100,
-    height: 100,
-    rotation: 0,
-    fill: 'red',
-    isDragging: false,
-    name: type + i.toString()
+    id: i.toString(), x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, width: 100, height: 100, rotation: 0, fill: 'red', isDragging: false, name: type + i.toString()
   }));
 }
 
 function App() {
   const stageRef = useRef(null);
-  const width = window.innerWidth;
-  const height = 950;
-  var [circle, setCircles] = useState(getShapesData('circle', 3));
+  const width = 1850;
+  const height = 750;
+  const [circle, setCircles] = useState(getShapesData('circle'));
   const [rectangles, setRectangles] = useState(getShapesData('rectangle'));
   const [selectedShapeID, setSelectedShapeID] = useState("");
 
@@ -47,8 +38,9 @@ function App() {
 
     // find clicked rect by its name
     const name = e.target.name();
-    const rect = rectangles.find((r) => r.name === name);
-    if (rect) {
+    const findSelected = [...rectangles,...circle].find((r) => r.name === name);
+
+    if (findSelected) {
       setSelectedShapeID(name);
     } else {
       setSelectedShapeID("");
@@ -56,14 +48,25 @@ function App() {
   };
 
   const handleChange = (index, newProps, type) => {
-    setRectangles((prevRectangles) => {
-      const updatedRectangles = [...prevRectangles];
-      updatedRectangles[index] = {
-        ...updatedRectangles[index],
-        ...newProps,
-      };
-      return updatedRectangles;
-    });
+    if (type === 'rectangle') {
+      setRectangles((prevRectangles) => {
+        const updatedRectangles = [...prevRectangles];
+        updatedRectangles[index] = {
+          ...updatedRectangles[index],
+          ...newProps,
+        };
+        return updatedRectangles;
+      });
+    } else {
+      setCircles((prevCircle) => {
+        const updatedCircles = [...prevCircle];
+        updatedCircles[index] = {
+          ...updatedCircles[index],
+          ...newProps,
+        };
+        return updatedCircles;
+      });
+    }
   };
 
   const [stage, setStage] = useState({ scale: 1, x: 0, y: 0 });
@@ -96,14 +99,16 @@ function App() {
 
   function addNewCircle() {
     let temp = circle;
-    temp.push({ id: temp.length + 1, x: 500, y: 500, rotation: 0, isDragging: false, fill: "#89b717" });
-    circle = temp;
-    console.log(temp);
+    temp.push({ id: temp.length + 1, x: 500, y: 500, rotation: 0, isDragging: false, fill: "#89b717", name: temp.length + 1 });
     setCircles(temp);
   }
 
   function addNewRectangle() {
-    console.log('addNewRectangle');
+    let temp = rectangles;
+    temp.push({
+      x: 100, y: 100, width: 100, height: 100, fill: "red", name: 'rectangle' + rectangles.length + 1, id: rectangles.length + 1
+    });
+    setRectangles(temp);
   }
 
 
@@ -112,7 +117,7 @@ function App() {
     <>
       <div className='row py-2 m-0'>
         <div className='col-sm-4'>
-          <span className='d-flex justify-content-evenly'>
+          <span className='d-flex justify-content-evenly h-100 align-items-center'>
             <span>
               <Button variant="outline-primary" onClick={() => { addNewCircle() }}>Add circle</Button>
             </span>
@@ -121,30 +126,43 @@ function App() {
             </span>
           </span>
         </div>
-        <div className='col-sm-4'>
-          Welcome
+        <div className='col-sm-8 d-flex flex-column'>
+          <span className='h4'>
+            Welcome
+          </span>
+          <span>
+            <span>Usage guide</span>
+            <ol>
+              <li>scroll in and out to change zoom of canvas</li>
+              <li>click on add buttons to add new shaped</li>
+              <li>click on shapes to rotate/resize them</li>
+              <li>drag any shape to change it's location</li>
+            </ol>
+          </span>
         </div>
       </div>
-      <Stage width={width} height={height} onWheel={handleWheel} scaleX={stage.scale} scaleY={stage.scale} x={stage.x} y={stage.y} ref={stageRef} onMouseDown={handleStageMouseDown}>
+      <div className='canvas-border'>
+        <Stage width={width} height={height} onWheel={handleWheel} scaleX={stage.scale} scaleY={stage.scale} x={stage.x} y={stage.y} ref={stageRef} onMouseDown={handleStageMouseDown}>
 
-        <Layer>
-          {rectangles.map((rect, i) => (
-            <Rectangle
-              key={i}
-              {...rect}
-              onTransform={(newProps) => handleChange(i, newProps)}
-            />
-          ))}
-          {/* {circle.map((circle, i) => (
-          <Circle
-            key={i}
-            {...circle}
-            onTransform={(newProps) => handleChange(i, newProps, 'circle')}
-          />
-        ))} */}
-          <TransformerComponent selectedShapeID={selectedShapeID} />
-        </Layer>
-      </Stage>
+          <Layer>
+            {rectangles.map((rect, i) => (
+              <Rectangle
+                key={i}
+                {...rect}
+                onTransform={(newProps) => handleChange(i, newProps, 'rectangle')}
+              />
+            ))}
+            {circle.map((circle, i) => (
+              <CircleShape
+                key={i}
+                {...circle}
+                onTransform={(newProps) => handleChange(i, newProps, 'circle')}
+              />
+            ))}
+            <TransformerComponent selectedShapeID={selectedShapeID} />
+          </Layer>
+        </Stage>
+      </div>
     </>
   );
 }
