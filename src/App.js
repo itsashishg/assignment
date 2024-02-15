@@ -7,12 +7,8 @@ import TransformerComponent from './components/transform';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import CircleShape from './components/circle';
+import { getShapesData, saveData } from './components/misc'
 
-function getShapesData(type) {
-  return [...Array(2)].map((_, i) => ({
-    id: i.toString(), x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, width: 100, height: 100, rotation: 0, fill: 'red', isDragging: false, name: type + i.toString()
-  }));
-}
 
 function App() {
   const stageRef = useRef(null);
@@ -38,7 +34,7 @@ function App() {
 
     // find clicked rect by its name
     const name = e.target.name();
-    const findSelected = [...rectangles,...circle].find((r) => r.name === name);
+    const findSelected = [...rectangles, ...circle].find((r) => r.name === name);
 
     if (findSelected) {
       setSelectedShapeID(name);
@@ -116,14 +112,17 @@ function App() {
   return (
     <>
       <div className='row py-2 m-0'>
-        <div className='col-sm-4'>
-          <span className='d-flex justify-content-evenly h-100 align-items-center'>
+        <div className='col-sm-4 d-flex flex-column justify-content-evenly align-items-center'>
+          <span className='d-flex justify-content-evenly w-100'>
             <span>
               <Button variant="outline-primary" onClick={() => { addNewCircle() }}>Add circle</Button>
             </span>
             <span>
               <Button variant="outline-primary" onClick={() => { addNewRectangle() }}>Add rectangle</Button>
             </span>
+          </span>
+          <span>
+            <Button variant="outline-primary" onClick={() => { saveData([...circle, ...rectangles]) }}>Save Data</Button>
           </span>
         </div>
         <div className='col-sm-8 d-flex flex-column'>
