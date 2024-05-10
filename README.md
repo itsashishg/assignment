@@ -1,27 +1,43 @@
 # Assignment
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.3.
+Version: v17.1.3
 
-## Development server
+## Module Structure
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Customers
 
-## Code scaffolding
+```
+Create a Customer
+Name*: TextField
+Email*: TextField
+Region*: Select
+Get Region Data from this API:
+https://api.first.org/data/v1/countries(Note: If facing CORS errors using this API then you can copy data in array and use it OR use this chrome extension which will allow CORS - https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?utm_source=ext_sidebar&hl=en-GB)
+Country: Select
+Get Country Data based on Region Selection from this API:
+https://api.first.org/data/v1/countries
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Pins
 
-## Build
+```
+Create a Pin
+Title*: TextField
+Image*: Drag n Drop (Single Select)
+Collaborators*: Multi-Select
+List of Customers
+Privacy*: Radio
+Options: Public, Private
+List of Pins
+Title
+Image
+Collaborators
+Privacy
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Dependencies
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- ng2-file-upload
+- ngx-select-ex
+- Bootstrap
+- Angular Material
