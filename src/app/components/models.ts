@@ -13,3 +13,11 @@ export interface CustomerData {
     region: string;
     country: string;
 }
+
+export interface RegionDataResponse {
+    access: string;
+    status: string;
+    "status-code": number;
+    version: string;
+    data: Object;
+}

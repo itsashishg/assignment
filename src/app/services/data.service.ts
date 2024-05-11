@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
-import { PinData } from '../components/models';
+import { PinData, RegionDataResponse } from '../components/models';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   // Mocks API call to fetch data.
   getTableData() {
@@ -21,4 +22,8 @@ export class DataService {
       ]
     )
   };
+
+  getRegionAndCountryData() {
+    return this.http.get<RegionDataResponse>(`https://api.first.org/data/v1/countries`);
+  }
 }

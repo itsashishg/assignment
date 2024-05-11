@@ -19,12 +19,12 @@
 
                                 <div class="col-sm-5 my-2">
                                     <div class="d-flex justify-content-around align-items-center h-100">
-                                        <button mat-stroked-button class="h-100 col-6 col-sm-5">
-                                            New Customer
-                                        </button>
-                                        <button mat-stroked-button class="h-100 col-6 col-sm-5">
-                                            New Pin
-                                        </button>
+                                        <button type="button" class="btn btn-outline-primary h-100 col-6 col-sm-5"
+                                            (click)="openCustomer()">
+                                            New Customer </button>
+                                        <button type="button" class="btn btn-outline-secondary h-100 col-6 col-sm-5"
+                                            (click)="openPin()"> New
+                                            Pin </button>
                                     </div>
                                 </div>
                             </div>

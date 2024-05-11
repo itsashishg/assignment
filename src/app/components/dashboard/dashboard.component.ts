@@ -7,13 +7,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { PinData } from '../models';
 import { DataService } from '../../services/data.service';
-import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { CustomerComponent } from '../customer/customer.component';
+import { PinComponent } from '../pin/pin.component';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatSortModule, MatPaginatorModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule, MatTableModule, MatSortModule, MatPaginatorModule, MatFormFieldModule, MatInputModule, MatDialogModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.less'
 })
@@ -24,7 +26,7 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private service: DataService) { }
+  constructor(private service: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.fetchData();
@@ -53,5 +55,13 @@ export class DashboardComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  openCustomer() {
+    this.dialog.open(CustomerComponent, { minWidth: '40%' });
+  }
+
+  openPin() {
+    this.dialog.open(PinComponent);
   }
 }
