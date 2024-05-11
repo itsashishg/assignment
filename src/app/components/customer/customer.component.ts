@@ -39,7 +39,7 @@ export class CustomerComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: CustomerData | null, private service: DataService, private snackBar: MatSnackBar, private dialog: MatDialogRef<CustomerComponent>,) {
     this.fetchDetails();
     if (data) {
-      console.log(data);
+      delete data.showEdit;
       this.customerInfo.setValue(data);
     }
   }
@@ -86,7 +86,8 @@ export class CustomerComponent {
   }
 
   submitForm() {
-    console.log(this.customerInfo.value)
-    this.dialog.close(this.customerInfo.value);
+    let newCustomer: CustomerData = this.customerInfo.value as CustomerData;
+    this.service.addCustomer(newCustomer);
+    this.dialog.close();
   }
 }

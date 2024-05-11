@@ -12,6 +12,7 @@ export interface CustomerData {
     email: string;
     region: string;
     country: string;
+    showEdit?: boolean;
 }
 
 export interface RegionDataResponse {

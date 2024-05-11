@@ -155,4 +155,8 @@ export class DataService {
   addPin(newPin: PinData) {
     this.pinDetails.unshift(newPin);
   }
+
+  addCustomer(newCustomer: CustomerData) {
+    this.customerDetails.unshift(newCustomer);
+  }
 }
