@@ -1,18 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-
-import { CommonModule } from '@angular/common';
-import {
-  MatDialogContent,
-  MatDialogModule,
-  MatDialogRef,
-  MatDialogTitle
-} from '@angular/material/dialog';
+import { MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { FileItem, FileUploadModule, FileUploader } from 'ng2-file-upload';
 import { NgxSelectModule } from 'ngx-select-ex';
 import { DataService } from '../../services/data.service';
 import { CustomerData, PinData } from '../models';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-pin',
@@ -31,11 +27,20 @@ export class PinComponent {
   uploader: FileUploader = new FileUploader({ url: 'localhost' });
   collaboratorsList: CustomerData[] = [];
 
-  constructor(private service: DataService, private dialog: MatDialogRef<PinComponent>) {
-    service.getCustomerDetails().subscribe({
+  constructor(private service: DataService, private dialog: MatDialogRef<PinComponent>, private snackBar: MatSnackBar,) {
+    this.fetchCollaborators();
+  }
+
+  fetchCollaborators(): void {
+    this.service.getCustomerDetails().subscribe({
       next: res => {
         this.collaboratorsList = res;
-        console.log(res)
+      },
+      complete: () => {
+        if (this.collaboratorsList.length === 0) {
+          this.snackBar.open('No customers found, please add customers first', 'close', { duration: 4000 });
+          this.dialog.close();
+        }
       }
     });
   }

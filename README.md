@@ -41,3 +41,12 @@ Privacy
 - ngx-select-ex
 - Bootstrap
 - Angular Material
+- Lodash (Due to version issue with angular, required for: ng2-file-upload)
+- Lodash.isEqual (Due to version issue with angular, required for: ngx-select-ex)
+
+## My 2 cents
+
+- Since Angular 17 supports `standalone component` which are simply put 'mini modules' hence we can use them across our application.
+- `customer` and `pin` component could have been combined into one single component. But since it was mentioned that these 2 should be separate components hence created that way.
+- Used material table (personal preference)
+- Using snackbar to show messages (which can again be converted into a standalone component)

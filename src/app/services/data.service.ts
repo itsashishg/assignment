@@ -11,9 +11,20 @@ export class DataService {
   private pinDetails: PinData[] = [];
 
   constructor(private http: HttpClient) {
-    this.insertMockData();
+    this.checkForStoredData();
   }
 
+  checkForStoredData() {
+    let storedValues = sessionStorage.getItem('data');
+    if (storedValues) {
+      this.pinDetails = JSON.parse(storedValues).pinDetails;
+      this.customerDetails = JSON.parse(storedValues).customerDetails;
+    }
+  }
+
+  /**
+   * To insert mock data in the beginning of the application.
+   */
   insertMockData() {
     this.pinDetails = [
       {
@@ -137,26 +148,53 @@ export class DataService {
         country: 'Belize'
       }
     ];
+    this.persistData();
+    return of<boolean>(true);
   }
 
-  // Mocks API call to fetch data.
+  /**
+   * To fetch lasted values of pin.
+   * @returns stored Pin details
+   */
   getTableData() {
     return of<PinData[]>(this.pinDetails)
   };
 
+  /**
+   * To fetch data for regions and countries.
+   * @returns List of countries with there region
+   */
   getRegionAndCountryData() {
     return this.http.get<RegionDataResponse>(`https://api.first.org/data/v1/countries`);
   }
 
+  /**
+   * To fetch customer details.
+   * @returns stored customer details
+   */
   getCustomerDetails() {
     return of<CustomerData[]>(this.customerDetails);
   }
 
+  /**
+   * Adds the passed pin into the database of stored pins.
+   * @param newPin new added pin
+   */
   addPin(newPin: PinData) {
     this.pinDetails.unshift(newPin);
+    this.persistData();
   }
 
+  /**
+   * Adds the passed customer details into the database of stored customers.
+   * @param newCustomer new added customer
+   */
   addCustomer(newCustomer: CustomerData) {
     this.customerDetails.unshift(newCustomer);
+    this.persistData();
+  }
+
+  persistData() {
+    sessionStorage.setItem('data', JSON.stringify({ pinDetails: this.pinDetails, customerDetails: this.customerDetails }));
   }
 }

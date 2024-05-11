@@ -23,27 +23,29 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './dashboard.component.less'
 })
 export class DashboardComponent implements OnInit {
-  // data: [] = []
   displayedColumns: string[] = ['title', 'imageURL', 'collaborators', 'privacy'];
   dataSource: MatTableDataSource<PinData> = new MatTableDataSource<PinData>();
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  noDataFound: boolean = false;
+  @ViewChild(MatPaginator) paginator!: MatPaginator; // To paginate the table
+  @ViewChild(MatSort) sort!: MatSort; // To allow sorting on table
   constructor(private service: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.fetchData();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
   fetchData() {
     this.service.getTableData().subscribe({
       next: (res) => {
+        if (!res.length) {
+          this.noDataFound = true;
+        }
         this.dataSource.data = res;
+        // Initializes paginator and sort
+        setTimeout(() => {
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        });
       },
       error: (err) => {
         console.log(err);
@@ -60,11 +62,25 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  /**
+   * Allows the user to open customer edit/add dialog box.
+   */
   openCustomer(customerDetails: CustomerData | null) {
-    this.dialog.open(CustomerComponent, { data: customerDetails, minWidth: '40%' });
+    this.dialog.open(CustomerComponent, { data: customerDetails, panelClass: ['col-12', 'col-sm-12', 'col-md-5'], disableClose: true });
   }
 
+  /**
+   * Currently it only allows to add pin.
+   */
   openPin() {
-    this.dialog.open(PinComponent, { minWidth: '40%' }).afterClosed().subscribe(() => this.fetchData());
+    this.dialog.open(PinComponent, { panelClass: ['col-12', 'col-sm-12', 'col-md-5'] }).afterClosed().subscribe(() => this.fetchData());
+  }
+
+  insertMockData() {
+    this.service.insertMockData().subscribe({
+      next: res => {
+        this.fetchData();
+      }
+    });
   }
 }

@@ -6,8 +6,8 @@
                     <div class="header">
                         <div class="h2 text-center mb-5 mt-2"> Pin Management</div>
                     </div>
-                    <ng-container *ngIf="dataSource.data;else noDataFound">
-                        <div class="col-sm-8 m-auto table-responsive">
+                    <ng-container>
+                        <div class="col-sm-12 col-md-10 m-auto table-responsive overflow-hidden">
                             <div class="row">
                                 <div class="col-sm-7 my-2">
                                     <mat-form-field appearance="outline" class="col-sm-8 col-12 h-100 pb-0">
@@ -68,14 +68,14 @@
 
                                     <ng-container matColumnDef="privacy">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Privacy </th>
-                                        <td mat-cell *matCellDef="let row">{{row.privacy}}</td>
+                                        <td mat-cell *matCellDef="let row" class="text-capitalize">{{row.privacy}}</td>
                                     </ng-container>
 
                                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
                                     <tr class="mat-row" *matNoDataRow>
-                                        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"
+                                        <td class="mat-cell text-center py-3 border border-1" colspan="4">No data found!
                                         </td>
                                     </tr>
                                 </table>
@@ -90,14 +90,20 @@
     </ng-container>
 </div>
 
-<ng-template #noDataFound>
+<ng-container *ngIf="dataSource.data.length === 0">
     <div class="row clearfix data-list">
-        <div class="col-md-12">
-            <div class="card card-head text-center">
+        <div class="col-md-10 mt-5 m-auto">
+            <div class="card card-head text-center bg-light bg-gradient">
                 <div class="card-body mt-5">
-                    <h6>No Data Found</h6>
+                    <h2>No Data Found</h2>
+                    <div class="fs-6 mb-3">
+                        Start by manually adding data or click the below button to add mock data.
+                    </div>
+                    <button type="button" class="btn btn-dark h-100 col-6 col-sm-5" (click)="insertMockData()">
+                        Generate mock data
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</ng-template>
+</ng-container>

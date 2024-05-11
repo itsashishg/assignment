@@ -1,20 +1,11 @@
 import { Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-
-import {
-  MAT_DIALOG_DATA,
-  MatDialogContent,
-  MatDialogModule,
-  MatDialogTitle,
-  MatDialogRef
-} from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { DataService } from '../../services/data.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { MAT_DIALOG_DATA, MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxSelectModule } from 'ngx-select-ex';
+import { DataService } from '../../services/data.service';
 import { CustomerData } from '../models';
 
 
@@ -38,10 +29,6 @@ export class CustomerComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: CustomerData | null, private service: DataService, private snackBar: MatSnackBar, private dialog: MatDialogRef<CustomerComponent>,) {
     this.fetchDetails();
-    if (data) {
-      delete data.showEdit;
-      this.customerInfo.setValue(data);
-    }
   }
 
   fetchDetails() {
@@ -54,12 +41,23 @@ export class CustomerComponent {
           });
         }
         else {
-          this.snackBar.open('Something went wrong!', 'Close');
+          this.snackBar.open('Something went wrong!', 'Close', { duration: 4000 });
+        }
+      },
+      complete: () => {
+        if (this.data) {
+          delete this.data.showEdit; // removes the redundant key of showEdit used to manage visibility on screen.
+          this.customerInfo.setValue(this.data);
         }
       }
     });
   }
 
+  /**
+   * Processes the received data and returns array of distinct regions.
+   * @param data data received from backend
+   * @returns allRegions
+   */
   getAllRegions(data: Object): string[] {
     const regions = new Set();
     for (const countryData of Object.values(data)) {
@@ -68,6 +66,12 @@ export class CustomerComponent {
     return Array.from(regions) as string[];
   }
 
+  /**
+   * Returns the list of countries corresponding to the region
+   * @param data full data 
+   * @param region region for which the countries are to be filtered by
+   * @returns country list
+   */
   getCountriesByRegion(data: Object, region: string) {
     const countries = [];
     for (const [countryCode, countryData] of Object.entries(data)) {
@@ -78,6 +82,11 @@ export class CustomerComponent {
     return countries;
   }
 
+  /**
+   * To return a list of countries in dropdown
+   * @param region 
+   * @returns 
+   */
   getCountryList(region: string | null) {
     if (region === null) {
       return [];
@@ -85,6 +94,9 @@ export class CustomerComponent {
     return this.areaDetails[region];
   }
 
+  /**
+   * Adds the country to the list of countries and closes the dialog box.
+   */
   submitForm() {
     let newCustomer: CustomerData = this.customerInfo.value as CustomerData;
     this.service.addCustomer(newCustomer);

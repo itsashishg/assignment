@@ -29,10 +29,6 @@
                     placeholder="Select Customer" formControlName="customers">
                 </ngx-select>
             </div>
-            <div *ngIf="pinInfo.get('customers')?.invalid && pinInfo.get('customers')?.touched">
-                <small class="errorClass" *ngIf="pinInfo.get('customers')?.errors?.['required']">
-                    Select collaboratory</small>
-            </div>
         </div>
         <div class="pt-2">
             <div class="center-align">
