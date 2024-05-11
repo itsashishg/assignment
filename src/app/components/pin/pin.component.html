@@ -15,17 +15,18 @@
             <div class="center-align">
                 <label for="name" class="w-25">Image*</label>
                 <div ng2FileDrop class="image-container" [uploader]="uploader" (fileOver)="fileOverBase($event)"
-                    (fileDrop)="fileDrop($event)" (click)="fileInput.click()">
+                    (fileDrop)="fileDrop($event)" (click)="imageInput.click()">
                     <p class="mb-0">Drop files here or click to select</p>
-                    <input type="file" ng2FileSelect [uploader]="uploader" #fileInput style="display: none;">
+                    <input type="file" ng2FileSelect [uploader]="uploader" accept=".png, .jpg, .jpeg" #imageInput
+                        style="display: none;">
                 </div>
             </div>
         </div>
         <div class="pt-2">
             <div class="center-align">
                 <label for="name" class="w-25">Collaboratory*</label>
-                <ngx-select class="w-100" [items]="collaboratorsList" optionTextField="name" optionValueField="name"
-                    [multiple]="true" placeholder="Select Customer" formControlName="customers">
+                <ngx-select class="w-100" [items]="collaboratorsList" optionTextField="title" [multiple]="true"
+                    placeholder="Select Customer" formControlName="customers">
                 </ngx-select>
             </div>
             <div *ngIf="pinInfo.get('customers')?.invalid && pinInfo.get('customers')?.touched">
@@ -38,15 +39,13 @@
                 <label for="name">Privacy*</label>
                 <div class="d-flex align-items-center justify-content-around w-100">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="r1"
-                            formControlName="privacy" value="public">
+                        <input class="form-check-input" type="radio" id="r1" formControlName="privacy" value="public">
                         <label class="form-check-label" for="r1">
                             Public
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="r2"
-                            formControlName="privacy" value="private">
+                        <input class="form-check-input" type="radio" id="r2" formControlName="privacy" value="private">
                         <label class="form-check-label" for="r2">
                             Private
                         </label>

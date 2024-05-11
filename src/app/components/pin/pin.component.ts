@@ -1,22 +1,18 @@
-import { Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
+import { CommonModule } from '@angular/common';
 import {
-  MAT_DIALOG_DATA,
   MatDialogContent,
   MatDialogModule,
-  MatDialogTitle,
-  MatDialogRef
+  MatDialogRef,
+  MatDialogTitle
 } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { DataService } from '../../services/data.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { CommonModule } from '@angular/common';
-import { FileUploader, FileItem, FileUploadModule } from 'ng2-file-upload';
+import { FileItem, FileUploadModule, FileUploader } from 'ng2-file-upload';
 import { NgxSelectModule } from 'ngx-select-ex';
-import { CustomerData } from '../models';
+import { DataService } from '../../services/data.service';
+import { CustomerData, PinData } from '../models';
 
 @Component({
   selector: 'app-pin',
@@ -39,6 +35,7 @@ export class PinComponent {
     service.getCustomerDetails().subscribe({
       next: res => {
         this.collaboratorsList = res;
+        console.log(res)
       }
     });
   }
@@ -56,7 +53,14 @@ export class PinComponent {
   }
 
   submitPin() {
-    this.service.addPin(this.pinInfo.value);
+    let newPinAdded: PinData = { privacy: this.pinInfo.value.privacy, title: this.pinInfo.value.title, imageURL: '', collaborators: [] };
+    this.pinInfo.value.customers.forEach((customerName: string) => {
+      let customer = this.collaboratorsList.find(c => c.title === customerName);
+      if (customer) {
+        newPinAdded.collaborators.push(customer);
+      }
+    });
+    this.service.addPin(newPinAdded);
     this.dialog.close();
   }
 }
