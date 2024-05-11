@@ -20,7 +20,7 @@
                                 <div class="col-sm-5 my-2">
                                     <div class="d-flex justify-content-around align-items-center h-100">
                                         <button type="button" class="btn btn-outline-primary h-100 col-6 col-sm-5"
-                                            (click)="openCustomer()">
+                                            (click)="openCustomer(null)">
                                             New Customer </button>
                                         <button type="button" class="btn btn-outline-secondary h-100 col-6 col-sm-5"
                                             (click)="openPin()"> New
@@ -48,7 +48,15 @@
 
                                 <ng-container matColumnDef="collaborators">
                                     <th mat-header-cell *matHeaderCellDef> Collaboratory </th>
-                                    <td mat-cell *matCellDef="let row"> {{row.collaborators}} </td>
+                                    <td mat-cell *matCellDef="let row">
+                                        <mat-chip-set>
+                                            <ng-container *ngFor="let cust of row.collaborators">
+                                                <mat-chip (click)="openCustomer(cust)">
+                                                    {{cust.title}}
+                                                </mat-chip>
+                                            </ng-container>
+                                        </mat-chip-set>
+                                    </td>
                                 </ng-container>
 
                                 <ng-container matColumnDef="privacy">

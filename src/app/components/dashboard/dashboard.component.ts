@@ -5,17 +5,18 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
-import { PinData } from '../models';
+import { CustomerData, PinData } from '../models';
 import { DataService } from '../../services/data.service';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { CustomerComponent } from '../customer/customer.component';
 import { PinComponent } from '../pin/pin.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatSortModule, MatPaginatorModule, MatFormFieldModule, MatInputModule, MatDialogModule],
+  imports: [CommonModule, MatTableModule, MatSortModule, MatPaginatorModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatChipsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.less'
 })
@@ -57,11 +58,11 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  openCustomer() {
-    this.dialog.open(CustomerComponent, { minWidth: '40%' });
+  openCustomer(customerDetails: CustomerData | null) {
+    this.dialog.open(CustomerComponent, { data: customerDetails, minWidth: '40%' });
   }
 
   openPin() {
-    this.dialog.open(PinComponent, { minWidth: '40%' });
+    this.dialog.open(PinComponent, { minWidth: '40%' }).afterClosed().subscribe(() => this.fetchData());
   }
 }

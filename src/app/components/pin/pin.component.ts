@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { FileUploader, FileItem, FileUploadModule } from 'ng2-file-upload';
 import { NgxSelectModule } from 'ngx-select-ex';
+import { CustomerData } from '../models';
 
 @Component({
   selector: 'app-pin',
@@ -32,17 +33,22 @@ export class PinComponent {
   });
   hasBaseDropZoneOver: boolean = false;
   uploader: FileUploader = new FileUploader({ url: 'localhost' });
-  collaboratorsList: any[] = [];
-  constructor() { }
+  collaboratorsList: CustomerData[] = [];
+
+  constructor(private service: DataService, private dialog: MatDialogRef<PinComponent>) {
+    service.getCustomerDetails().subscribe({
+      next: res => {
+        this.collaboratorsList = res;
+      }
+    });
+  }
 
   public fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
   }
 
   onFileSelected(event: any): void {
-    // Handle file selection event
     const fileItem: FileItem = this.uploader.queue[this.uploader.queue.length - 1];
-    console.log('Selected File:', fileItem._file);
   }
 
   fileDrop(event: any): void {
@@ -50,6 +56,7 @@ export class PinComponent {
   }
 
   submitPin() {
-
+    this.service.addPin(this.pinInfo.value);
+    this.dialog.close();
   }
 }

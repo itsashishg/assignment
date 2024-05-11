@@ -15,6 +15,7 @@ import { DataService } from '../../services/data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { NgxSelectModule } from 'ngx-select-ex';
+import { CustomerData } from '../models';
 
 
 @Component({
@@ -35,9 +36,16 @@ export class CustomerComponent {
   areaDetails: any = {};
   allRegions: string[] = [];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private service: DataService, private snackBar: MatSnackBar, private dialog: MatDialogRef<CustomerComponent>,
-  ) {
-    service.getRegionAndCountryData().subscribe({
+  constructor(@Inject(MAT_DIALOG_DATA) public data: CustomerData | null, private service: DataService, private snackBar: MatSnackBar, private dialog: MatDialogRef<CustomerComponent>,) {
+    this.fetchDetails();
+    if (data) {
+      console.log(data);
+      this.customerInfo.setValue(data);
+    }
+  }
+
+  fetchDetails() {
+    this.service.getRegionAndCountryData().subscribe({
       next: res => {
         if (res['status-code'] === 200) {
           this.allRegions = this.getAllRegions(res.data);
@@ -49,7 +57,7 @@ export class CustomerComponent {
           this.snackBar.open('Something went wrong!', 'Close');
         }
       }
-    })
+    });
   }
 
   getAllRegions(data: Object): string[] {
