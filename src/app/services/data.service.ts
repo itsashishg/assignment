@@ -32,18 +32,21 @@ export class DataService {
         imageURL: 'https://example.com/image1.jpg',
         collaborators: [
           {
+            id: 0,
             title: 'John Doe',
             email: 'john.doe@example.com',
             region: 'Asia',
             country: 'Uzbekistan'
           },
           {
+            id: 1,
             title: 'Jane Smith',
             email: 'jane.smith@example.com',
             region: 'Asia',
             country: 'Uzbekistan'
           },
           {
+            id: 2,
             title: 'Michael Johnson',
             email: 'michael.johnson@example.com',
             region: 'Asia',
@@ -57,12 +60,14 @@ export class DataService {
         imageURL: 'https://example.com/image2.jpg',
         collaborators: [
           {
+            id: 3,
             title: 'Emily Davis',
             email: 'emily.davis@example.com',
             region: 'Africa',
             country: 'Congo (the Democratic Republic of the)'
           },
           {
+            id: 4,
             title: 'David Lee',
             email: 'david.lee@example.com',
             region: 'Africa',
@@ -76,18 +81,21 @@ export class DataService {
         imageURL: 'https://example.com/image3.jpg',
         collaborators: [
           {
+            id: 5,
             title: 'Sophia Gonzalez',
             email: 'sophia.gonzalez@example.com',
             region: 'Asia',
             country: 'Malaysia'
           },
           {
+            id: 6,
             title: 'Liam Fernandez',
             email: 'liam.fernandez@example.com',
             region: 'Africa',
             country: 'Egypt'
           },
           {
+            id: 7,
             title: 'Isabella Oliveira',
             email: 'isabella.oliveira@example.com',
             region: 'Central America',
@@ -100,48 +108,56 @@ export class DataService {
 
     this.customerDetails = [
       {
+        id: 0,
         title: 'John Doe',
         email: 'john.doe@example.com',
         region: 'Asia',
         country: 'Uzbekistan'
       },
       {
+        id: 1,
         title: 'Jane Smith',
         email: 'jane.smith@example.com',
         region: 'Asia',
         country: 'Uzbekistan'
       },
       {
+        id: 2,
         title: 'Michael Johnson',
         email: 'michael.johnson@example.com',
         region: 'Asia',
         country: 'Singapore'
       },
       {
+        id: 3,
         title: 'Emily Davis',
         email: 'emily.davis@example.com',
         region: 'Africa',
         country: 'Congo (the Democratic Republic of the)'
       },
       {
+        id: 4,
         title: 'David Lee',
         email: 'david.lee@example.com',
         region: 'Africa',
         country: 'Congo (the Democratic Republic of the)'
       },
       {
+        id: 5,
         title: 'Sophia Gonzalez',
         email: 'sophia.gonzalez@example.com',
         region: 'Asia',
         country: 'Malaysia'
       },
       {
+        id: 6,
         title: 'Liam Fernandez',
         email: 'liam.fernandez@example.com',
         region: 'Africa',
         country: 'Egypt'
       },
       {
+        id: 7,
         title: 'Isabella Oliveira',
         email: 'isabella.oliveira@example.com',
         region: 'Central America',
@@ -186,12 +202,35 @@ export class DataService {
   }
 
   /**
-   * Adds the passed customer details into the database of stored customers.
-   * @param newCustomer new added customer
+   * Adds the passed customer details into the database of stored customers if value is not present else updated it.
+   * @param newCustomerDetails new added customer
    */
-  addCustomer(newCustomer: CustomerData) {
-    this.customerDetails.unshift(newCustomer);
+  upsertCustomer(newCustomerDetails: CustomerData) {
+    let existInDatabase = this.customerDetails.findIndex(c => c.id === newCustomerDetails.id);
+    console.log(existInDatabase)
+    if (existInDatabase !== -1) {
+      this.customerDetails[existInDatabase] = newCustomerDetails;
+      this.updatePin(newCustomerDetails);
+    }
+    else {
+      newCustomerDetails.id = this.customerDetails.length + 1;
+      console.log(newCustomerDetails)
+      this.customerDetails.unshift(newCustomerDetails);
+    }
     this.persistData();
+    return of<boolean>(true);
+  }
+
+  updatePin(newDetails: CustomerData) {
+    let tempData = this.pinDetails;
+    tempData.forEach(pins => {
+      pins.collaborators.forEach((collaborators, index) => {
+        if (collaborators.id === newDetails.id) {
+          pins.collaborators[index] = newDetails;
+        }
+      });
+    });
+    this.pinDetails = tempData;
   }
 
   persistData() {

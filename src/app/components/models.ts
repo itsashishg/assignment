@@ -8,6 +8,7 @@ export interface PinData {
 }
 
 export interface CustomerData {
+    id: number;
     title: string;
     email: string;
     region: string;

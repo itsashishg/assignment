@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -16,8 +16,9 @@ import { CustomerData } from '../models';
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.less'
 })
-export class CustomerComponent {
+export class CustomerComponent implements OnInit {
   customerInfo = new FormGroup({
+    id: new FormControl<number>(-2, [Validators.required]),
     title: new FormControl<string>('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     region: new FormControl<string>('', [Validators.required]),
@@ -27,7 +28,9 @@ export class CustomerComponent {
   areaDetails: any = {};
   allRegions: string[] = [];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: CustomerData | null, private service: DataService, private snackBar: MatSnackBar, private dialog: MatDialogRef<CustomerComponent>,) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: CustomerData | null, private service: DataService, private snackBar: MatSnackBar, private dialog: MatDialogRef<CustomerComponent>,) { }
+
+  ngOnInit(): void {
     this.fetchDetails();
   }
 
@@ -99,7 +102,9 @@ export class CustomerComponent {
    */
   submitForm() {
     let newCustomer: CustomerData = this.customerInfo.value as CustomerData;
-    this.service.addCustomer(newCustomer);
-    this.dialog.close();
+    this.service.upsertCustomer(newCustomer).subscribe(data => {
+      this.dialog.close(newCustomer);
+    });
+
   }
 }

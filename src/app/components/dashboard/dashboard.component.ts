@@ -66,7 +66,7 @@ export class DashboardComponent implements OnInit {
    * Allows the user to open customer edit/add dialog box.
    */
   openCustomer(customerDetails: CustomerData | null) {
-    this.dialog.open(CustomerComponent, { data: customerDetails, panelClass: ['col-12', 'col-sm-12', 'col-md-5'], disableClose: true });
+    this.dialog.open(CustomerComponent, { data: customerDetails, panelClass: ['col-12', 'col-sm-12', 'col-md-5'], disableClose: true }).afterClosed().subscribe(() => this.fetchData());
   }
 
   /**

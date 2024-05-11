@@ -59,8 +59,8 @@ export class PinComponent {
 
   submitPin() {
     let newPinAdded: PinData = { privacy: this.pinInfo.value.privacy, title: this.pinInfo.value.title, imageURL: '', collaborators: [] };
-    this.pinInfo.value.customers.forEach((customerName: string) => {
-      let customer = this.collaboratorsList.find(c => c.title === customerName);
+    this.pinInfo.value.customers.forEach((customerName: number) => {
+      let customer = this.collaboratorsList.find(c => c.id === customerName);
       if (customer) {
         newPinAdded.collaborators.push(customer);
       }
