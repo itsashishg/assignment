@@ -14,13 +14,13 @@ import { MatInputModule } from '@angular/material/input';
 import { DataService } from '../../services/data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
-import { FileUploader } from 'ng2-file-upload';
-import { FileUploadModule } from 'ng2-file-upload';
+import { FileUploader, FileItem, FileUploadModule } from 'ng2-file-upload';
+import { NgxSelectModule } from 'ngx-select-ex';
 
 @Component({
   selector: 'app-pin',
   standalone: true,
-  imports: [MatDialogTitle, MatDialogContent, MatDialogModule, CommonModule, ReactiveFormsModule, MatButtonModule, FileUploadModule],
+  imports: [MatDialogTitle, MatDialogContent, MatDialogModule, CommonModule, ReactiveFormsModule, MatButtonModule, FileUploadModule, NgxSelectModule],
   templateUrl: './pin.component.html',
   styleUrl: './pin.component.less'
 })
@@ -31,11 +31,22 @@ export class PinComponent {
     privacy: new FormControl('', Validators.required),
   });
   hasBaseDropZoneOver: boolean = false;
-  uploader: FileUploader = new FileUploader();
+  uploader: FileUploader = new FileUploader({ url: 'localhost' });
+  collaboratorsList: any[] = [];
   constructor() { }
 
   public fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
+  }
+
+  onFileSelected(event: any): void {
+    // Handle file selection event
+    const fileItem: FileItem = this.uploader.queue[this.uploader.queue.length - 1];
+    console.log('Selected File:', fileItem._file);
+  }
+
+  fileDrop(event: any): void {
+    // Handle file drop event
   }
 
   submitPin() {

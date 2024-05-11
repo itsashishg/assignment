@@ -62,6 +62,6 @@ export class DashboardComponent implements OnInit {
   }
 
   openPin() {
-    this.dialog.open(PinComponent);
+    this.dialog.open(PinComponent, { minWidth: '40%' });
   }
 }

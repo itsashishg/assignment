@@ -1,0 +1,63 @@
+<h2 mat-dialog-title>Add Pin</h2>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="pinInfo" (ngSubmit)="submitPin()">
+        <div class="pt-2">
+            <div class="center-align">
+                <label for="name" class="w-25">Title*</label>
+                <input placeholder="Enter Title" class="form-control" type="text" id="name" formControlName="title">
+            </div>
+            <div *ngIf="pinInfo.get('title')?.invalid && pinInfo.get('title')?.touched">
+                <span class="text-danger" *ngIf="pinInfo.get('title')?.errors?.['required']">
+                    Title is required.</span>
+            </div>
+        </div>
+        <div class="pt-2">
+            <div class="center-align">
+                <label for="name" class="w-25">Image*</label>
+                <div ng2FileDrop class="image-container" [uploader]="uploader" (fileOver)="fileOverBase($event)"
+                    (fileDrop)="fileDrop($event)" (click)="fileInput.click()">
+                    <p class="mb-0">Drop files here or click to select</p>
+                    <input type="file" ng2FileSelect [uploader]="uploader" #fileInput style="display: none;">
+                </div>
+            </div>
+        </div>
+        <div class="pt-2">
+            <div class="center-align">
+                <label for="name" class="w-25">Collaboratory*</label>
+                <ngx-select class="w-100" [items]="collaboratorsList" optionTextField="name" optionValueField="name"
+                    [multiple]="true" placeholder="Select Customer" formControlName="customers">
+                </ngx-select>
+            </div>
+            <div *ngIf="pinInfo.get('customers')?.invalid && pinInfo.get('customers')?.touched">
+                <small class="errorClass" *ngIf="pinInfo.get('customers')?.errors?.['required']">
+                    Select collaboratory</small>
+            </div>
+        </div>
+        <div class="pt-2">
+            <div class="center-align">
+                <label for="name">Privacy*</label>
+                <div class="d-flex align-items-center justify-content-around w-100">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="r1"
+                            formControlName="privacy" value="public">
+                        <label class="form-check-label" for="r1">
+                            Public
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="r2"
+                            formControlName="privacy" value="private">
+                        <label class="form-check-label" for="r2">
+                            Private
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [disabled]="!pinInfo.valid" cdkFocusInitial (click)="submitPin()">Submit</button>
+
+</mat-dialog-actions>
